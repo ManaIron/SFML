@@ -4,18 +4,20 @@
 #include "GameObject.h"
 
 
-GameObject::GameObject(sf::CircleShape cCircle, int iRay) 
+// Constructeurs et Destructeur
+
+GameObject::GameObject(int radius)
 {
-	circle = cCircle;
-	sizeX = iRay;
-	sizeY = iRay;
+	form = sf::CircleShape(radius);
+	sizeX = 2 * radius;
+	sizeY = 2 * radius;
 }
 
-GameObject::GameObject(sf::RectangleShape rRect, int iLength, int iHidth)
+GameObject::GameObject(int length, int heigth)
 {
-	rect = rRect;
-	sizeX = iLength;
-	sizeY = iHidth;
+	form = sf::RectangleShape(length,heigth);
+	sizeX = length;
+	sizeY = heigth;
 }
 
 GameObject::~GameObject()

@@ -9,8 +9,8 @@ class GameObject
 {
 public: 
 
-	GameObject(sf::CircleShape cCirlce, int iRay); //constructeur de cercle
-	GameObject(sf::RectangleShape rect, int length, int hidth);//constructeur de rect
+	GameObject(int radius); //constructeur de cercle
+	GameObject(int length, int heigth);//constructeur de rect
 	~GameObject(); //destructeur
 
 
@@ -20,7 +20,6 @@ private:
 	int sizeX;
 	int sizeY;
 
-	sf::CircleShape circle;
-	sf::RectangleShape rect;
+	sf::Shape form;
 
 };
