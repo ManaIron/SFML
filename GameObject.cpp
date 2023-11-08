@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 
 #include "GameObject.h"
@@ -6,8 +7,9 @@
 
 // Constructeurs et Destructeur
 
-GameObject::GameObject(int iRadius, int x, int y)
+GameObject::GameObject(Game GameInstance, int iRadius, int x, int y)
 {
+	gameAttribut = GameInstance;
 	form = new sf::CircleShape(iRadius);
 	form->setPosition(x, y);
 	sizeX = 2 * iRadius;
@@ -16,8 +18,9 @@ GameObject::GameObject(int iRadius, int x, int y)
 	form->setOrigin(iRadius, iRadius);
 }
 
-GameObject::GameObject(int iLength, int iHeigth, int x, int y)
-{
+GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y)
+{	
+	gameAttribut = GameInstance;
 	sizeX = iLength;
 	sizeY = iHeigth;
 	form = new sf::RectangleShape(sf::Vector2f(iLength,iHeigth));
@@ -32,8 +35,26 @@ GameObject::~GameObject()
 }
 
 
+// Gets
 
-//Main  Tools
+int GameObject::getSizeX()
+{
+	return sizeX;
+}
+
+int GameObject::getSizeY()
+{
+	return sizeY;
+}
+
+std::vector<int> GameObject::getPosition()
+{
+	return position;
+}
+
+
+
+//Main Tools
 
 
 void GameObject::rotate( int iAngle)
@@ -62,13 +83,29 @@ void GameObject::move(float dirX,float dirY, float deltaTime)
 	float speed = deltaTime * 10.f; // 10 pixels par seconde
 	position[0] += dirX * speed;
 	position[1] += dirY * speed;
+
+	form->setPosition(position[0], position[1]);
 }
+
+
+
 
 //Tools
 
 
 std::vector<float> GameObject::directionVector(int mousePositionX, int mousePositionY)
 {
+	int sizeScreenX = gameAttribut.getLengthScreen();
+	int sizeScreenY = gameAttribut.getHeightScreen();
+	std::vector<float> direction;
 
-	return { 0,0 };
+	int dirX = mousePositionX - sizeScreenX;
+	int dirY = mousePositionY - sizeScreenY;
+
+	float normedDirX = dirX / std::sqrt(dirX * dirX + dirY * dirY);
+	float normedDirY = dirY / std::sqrt(dirX * dirX + dirY * dirY);
+
+	direction = { normedDirX, normedDirY };
+
+	return direction;
 }

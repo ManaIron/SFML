@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
+#include "Game.h"
 
 #include <iostream>
 int main()
@@ -25,26 +26,36 @@ int main()
 
     // ENd Test
 
-    int lengthScreen = 800;
-    int heightScreen = 800;
-    sf::RenderWindow window(sf::VideoMode(lengthScreen, heightScreen), "SFML works!");
+    Game GameInstance(800, 800);
+    sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
-    GameObject circle = GameObject(100, lengthScreen / 2, heightScreen / 2);
+    GameObject circle = GameObject(GameInstance, 100, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() / 2);
 
     sf::Clock clock;
     float deltaTime = 0;
 
-while (window.isOpen())
-{
-    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-    std::cout << localPosition.x << "et" << localPosition.y << std::endl;
-
-    sf::Event event;
-    while (window.pollEvent(event))
+    while (window.isOpen())
     {
-        if (event.type == sf::Event::Closed)
-            window.close();
-    }
+        sf::Vector2i localPosition = sf::Mouse::getPosition(window);
+        //std::cout << localPosition.x << "et" << localPosition.y << std::endl;
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+        }
+
+        //static bool lock_click;
+        if (event.type == sf::Event::MouseButtonPressed)
+        {
+            if (event.mouseButton.button == sf::Mouse::Left && lock_click != true)
+            {
+                std::cout << "LETS GOO le cliiicck" << std::endl;
+            }
+        }
 
 
     window.clear();
@@ -59,7 +70,7 @@ while (window.isOpen())
 
     deltaTime = clock.restart().asSeconds();
 
-}
+    }
     
 
     return 0;
