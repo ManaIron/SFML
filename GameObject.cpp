@@ -112,3 +112,18 @@ void GameObject::directionVector(int mousePositionX, int mousePositionY)
 
 	direction = { normedDirX, normedDirY };
 }
+
+
+float GameObject::calculAngle(int mousePositionX, int mousePositionY)
+{	
+
+	float adjSide = abs(mousePositionX - position[0]);
+	float oppSide = abs(mousePositionY - position[1]);
+
+	float angle = atan(oppSide / adjSide) * 180 / 3.14;
+	if (mousePositionX > position[0])
+	{
+		angle = -angle;
+	}
+	return angle;
+}

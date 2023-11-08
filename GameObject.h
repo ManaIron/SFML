@@ -27,6 +27,7 @@ public:
 	sf::Shape* form; //Definit une adresse
 
 	void directionVector(int mousePositionX, int mousePositionY);
+	float calculAngle(int mousePositionX, int mousePositionY);
 
 private:
 
