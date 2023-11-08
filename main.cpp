@@ -12,6 +12,7 @@ int main()
 
     GameObject circle = GameObject(GameInstance, 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() -10);
     GameObject rect = GameObject(GameInstance, 100, 50, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+    GameObject brick = GameObject(GameInstance, 75, 30, 500, 100);
 
     sf::Clock clock;
     float deltaTime = 0;
@@ -59,10 +60,16 @@ int main()
         if (checkClick == true)
         {
             circle.move(deltaTime);
+           
+            if (circle.collide(circle.form, brick.form) == true)
+            {
+                brick.form->setFillColor(sf::Color(200, 0,0));
+            }
         }
 
         window.draw(*circle.form);
         window.draw(*rect.form);
+        window.draw(*brick.form);
 
         window.display();
 
