@@ -29,7 +29,7 @@ int main()
     Game GameInstance(800, 800);
     sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
-    GameObject circle = GameObject(GameInstance, 100, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() / 2);
+    GameObject circle = GameObject(GameInstance, 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() -10);
 
     sf::Clock clock;
     float deltaTime = 0;
@@ -48,27 +48,39 @@ int main()
             }
         }
 
-        //static bool lock_click;
+        static bool lock_click;
+        if (event.type != sf::Event::MouseButtonPressed)
+        {
+            lock_click = false;
+        }
         if (event.type == sf::Event::MouseButtonPressed)
         {
             if (event.mouseButton.button == sf::Mouse::Left && lock_click != true)
             {
+
+
+
+
                 std::cout << "LETS GOO le cliiicck" << std::endl;
+                lock_click = true;
             }
         }
 
 
-    window.clear();
+        window.clear();
       
-    //Test
-    //window.draw(rect);
-    //window.draw(rect_rouge);
-    //End Test
+        circle.directionVector(localPosition.x, localPosition.y);
+        //circle.move(deltaTime);
+        //Test
+        //window.draw(rect);
+        //window.draw(rect_rouge);
+        //End Test
+       
+        window.draw(*circle.form);
 
+        window.display();
 
-    window.display();
-
-    deltaTime = clock.restart().asSeconds();
+        deltaTime = clock.restart().asSeconds();
 
     }
     

@@ -14,8 +14,9 @@ GameObject::GameObject(Game GameInstance, int iRadius, int x, int y)
 	form->setPosition(x, y);
 	sizeX = 2 * iRadius;
 	sizeY = 2 * iRadius;
-	position = { x , y };
+	position = { static_cast<float>(x) , static_cast<float>(y) };
 	form->setOrigin(iRadius, iRadius);
+
 }
 
 GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y)
@@ -25,7 +26,7 @@ GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y
 	sizeY = iHeigth;
 	form = new sf::RectangleShape(sf::Vector2f(iLength,iHeigth));
 	form->setPosition(x, y);
-	position = { x , y };
+	position = { static_cast<float>(x) , static_cast<float>(y) };
 	form->setOrigin(iLength/2, iHeigth/2);
 }
 
@@ -47,12 +48,15 @@ int GameObject::getSizeY()
 	return sizeY;
 }
 
-std::vector<int> GameObject::getPosition()
+std::vector<float> GameObject::getPosition()
 {
 	return position;
 }
 
-
+std::vector<float> GameObject::getDirection()
+{
+	return direction;
+}
 
 //Main Tools
 
@@ -78,9 +82,11 @@ bool GameObject::collide(sf::Shape* sForm1, sf::Shape* sForm2)
 }
 
 
-void GameObject::move(float dirX,float dirY, float deltaTime)
+void GameObject::move(float deltaTime)
 {
-	float speed = deltaTime * 10.f; // 10 pixels par seconde
+	float dirX = direction[0];
+	float dirY = direction[1];
+	float speed = deltaTime * 300.f; // 10 pixels par seconde
 	position[0] += dirX * speed;
 	position[1] += dirY * speed;
 
@@ -93,19 +99,16 @@ void GameObject::move(float dirX,float dirY, float deltaTime)
 //Tools
 
 
-std::vector<float> GameObject::directionVector(int mousePositionX, int mousePositionY)
+void GameObject::directionVector(int mousePositionX, int mousePositionY)
 {
 	int sizeScreenX = gameAttribut.getLengthScreen();
 	int sizeScreenY = gameAttribut.getHeightScreen();
-	std::vector<float> direction;
 
-	int dirX = mousePositionX - sizeScreenX;
-	int dirY = mousePositionY - sizeScreenY;
+	float dirX = mousePositionX - sizeScreenX / 2;
+	float dirY = mousePositionY - sizeScreenY;
 
 	float normedDirX = dirX / std::sqrt(dirX * dirX + dirY * dirY);
 	float normedDirY = dirY / std::sqrt(dirX * dirX + dirY * dirY);
 
 	direction = { normedDirX, normedDirY };
-
-	return direction;
 }

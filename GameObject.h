@@ -17,24 +17,25 @@ public:
 
 	int getSizeX();
 	int getSizeY();
-	std::vector<int> getPosition();
+	std::vector<float> getPosition();
+	std::vector<float> getDirection();
 
 	void rotate(int iAngle);
-	void move(float dirX, float dirY, float deltaTime);
+	void move(float deltaTime);
 	bool collide(sf::Shape* sForm1, sf::Shape* sForm2);
 
 	sf::Shape* form; //Definit une adresse
 
+	void directionVector(int mousePositionX, int mousePositionY);
 
 private:
 
 	Game gameAttribut;
-	std::vector<int> position;
+	std::vector<float> position;
+	std::vector<float> direction;
 	int sizeX;
 	int sizeY;
 
 	//tools
-
-	std::vector<float> directionVector(int mousePositionX, int mousePositionY);
 
 };
