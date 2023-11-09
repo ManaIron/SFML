@@ -6,8 +6,6 @@ class Canon : public GameObject
 {
 public:
 
-
 private:
 
-	int orientationAngle;
 };

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Game.h"
 #include "Wall.h"
+#include "Brick.h"
 
 #include <iostream>
 int main()
@@ -13,8 +14,8 @@ int main()
 
     GameObject circle = GameObject(GameInstance, 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() -10);
     GameObject rect = GameObject(GameInstance, 100, 50, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-    GameObject brick = GameObject(GameInstance, 75, 30, 500, 100);
-    GameObject brick2 = GameObject(GameInstance, 75, 30, 600, 700);
+    Brick brick = Brick(GameInstance, 75, 30, 500, 100, 4);
+    Brick brick2 = Brick(GameInstance, 75, 30, 100, 300, 3);
     Wall walls;
     walls.createWalls(GameInstance);
 
@@ -27,6 +28,7 @@ int main()
         //std::cout << localPosition.x << "et" << localPosition.y << std::endl;
         //std::cout << rect.calculAngle(localPosition.x, localPosition.y) << std::endl;
         rect.rotate(rect.calculAngle(localPosition.x, localPosition.y));
+        
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -57,13 +59,47 @@ int main()
                 checkClick = true;
             }
         }
-
-
+        
         window.clear();
       
         if (checkClick == true)
         {
             circle.move(deltaTime);
+
+            if (circle.collide(brick.form) == true)
+            {
+                brick.loseLife();
+                if (brick.getNbLife() == 0)
+                {
+                    brick.form->setPosition(-50, -50);
+                }
+                if (circle.detectXCollide(brick.form))
+                {
+                    circle.reboundX();
+                    //Change direction;
+                }
+                else
+                {
+                    circle.reboundY();
+                }
+            }
+            if (circle.collide(brick2.form) == true)
+            {
+                brick2.loseLife();
+                if (brick2.getNbLife() == 0)
+                {
+                    brick2.form->setPosition(-50, -50);
+                }
+                if (circle.detectXCollide(brick2.form))
+                {
+                    circle.reboundX();
+                    //Change direction;
+                }
+                else
+                {
+                    circle.reboundY();
+                }
+            }
            
             if (circle.collide(walls.wall1.form) == true)
             {
