@@ -16,7 +16,7 @@ GameObject::GameObject(Game GameInstance, int iRadius, int x, int y)
 	sizeY = 2 * iRadius;
 	position = { static_cast<float>(x) , static_cast<float>(y) };
 	form->setOrigin(iRadius, iRadius);
-
+	originDirection = { static_cast<float>(gameAttribut.getLengthScreen() / 2), static_cast<float>(gameAttribut.getHeightScreen()) };
 }
 
 GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y)
@@ -28,6 +28,13 @@ GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y
 	form->setPosition(x, y);
 	position = { static_cast<float>(x) , static_cast<float>(y) };
 	form->setOrigin(iLength/2, iHeigth/2);
+}
+
+//constructeur par défaut
+
+GameObject::GameObject()
+{
+
 }
 
 GameObject::~GameObject()
@@ -67,17 +74,19 @@ void GameObject::rotate( int iAngle)
 }
 
 
-bool GameObject::collide(sf::Shape* sForm1, sf::Shape* sForm2)
+bool GameObject::collide(sf::Shape* sForm1)
 {
 
 	bool collision = false;
 	sf::FloatRect boundingBox = sForm1->getGlobalBounds();
-	sf::FloatRect otherBox = sForm2->getGlobalBounds();
+	sf::FloatRect otherBox = form->getGlobalBounds();
+
 
 	if (boundingBox.intersects(otherBox))
 	{
-		bool collision = true;
+		collision = true;
 	}
+
 	return collision;
 }
 
@@ -99,13 +108,13 @@ void GameObject::move(float deltaTime)
 //Tools
 
 
-void GameObject::directionVector(int mousePositionX, int mousePositionY)
+void GameObject::directionVector(int arrivalX, int arrivalY)
 {
 	int sizeScreenX = gameAttribut.getLengthScreen();
 	int sizeScreenY = gameAttribut.getHeightScreen();
 
-	float dirX = mousePositionX - sizeScreenX / 2;
-	float dirY = mousePositionY - sizeScreenY;
+	float dirX = arrivalX - originDirection[0];
+	float dirY = arrivalY - originDirection[1];
 
 	float normedDirX = dirX / std::sqrt(dirX * dirX + dirY * dirY);
 	float normedDirY = dirY / std::sqrt(dirX * dirX + dirY * dirY);
@@ -126,4 +135,28 @@ float GameObject::calculAngle(int mousePositionX, int mousePositionY)
 		angle = -angle;
 	}
 	return angle;
+}
+
+
+void GameObject::reboundX()
+{	
+	direction[1] = -direction[1];
+}
+
+void GameObject::reboundY()
+{
+	direction[0] = -direction[0];
+}
+
+bool GameObject::detectXCollide(sf::Shape* sForm1)
+{
+	sf::FloatRect boundingBox = sForm1->getGlobalBounds();
+	sf::FloatRect otherBox = form->getGlobalBounds();
+	bool xCollide = false;
+
+	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.1)
+	{
+		xCollide = true;
+	}
+	return xCollide;
 }

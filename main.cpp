@@ -13,6 +13,7 @@ int main()
     GameObject circle = GameObject(GameInstance, 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() -10);
     GameObject rect = GameObject(GameInstance, 100, 50, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
     GameObject brick = GameObject(GameInstance, 75, 30, 500, 100);
+    GameObject brick2 = GameObject(GameInstance, 75, 30, 600, 700);
 
     sf::Clock clock;
     float deltaTime = 0;
@@ -21,7 +22,7 @@ int main()
     {
         sf::Vector2i localPosition = sf::Mouse::getPosition(window);
         //std::cout << localPosition.x << "et" << localPosition.y << std::endl;
-        std::cout << rect.calculAngle(localPosition.x, localPosition.y) << std::endl;
+        //std::cout << rect.calculAngle(localPosition.x, localPosition.y) << std::endl;
         rect.rotate(rect.calculAngle(localPosition.x, localPosition.y));
 
         sf::Event event;
@@ -61,15 +62,36 @@ int main()
         {
             circle.move(deltaTime);
            
-            if (circle.collide(circle.form, brick.form) == true)
+            if (circle.collide(brick.form) == true)
             {
-                brick.form->setFillColor(sf::Color(200, 0,0));
+                if (circle.detectXCollide(brick.form))
+                {
+                    circle.reboundX();
+                    //Change direction;
+                }
+                else
+                {
+                    circle.reboundY();
+                }
+            }
+            if (circle.collide(brick2.form) == true)
+            {
+                if (circle.detectXCollide(brick2.form))
+                {
+                    circle.reboundX();
+                    //Change direction;
+                }
+                else
+                {
+                    circle.reboundY();
+                }
             }
         }
 
         window.draw(*circle.form);
         window.draw(*rect.form);
         window.draw(*brick.form);
+        window.draw(*brick2.form);
 
         window.display();
 
