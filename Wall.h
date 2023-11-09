@@ -1,14 +1,18 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Game.h"
 
-class Wall : GameObject
+class Wall : public GameObject
 {
 public:
 
-	Wall();
+	void createWalls(Game GameInstance);
 
-	//void createWalls();
+	GameObject wall1;
+	GameObject wall2;
+	GameObject wall3;
+	GameObject wall4;
 
 private:
 

@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-class Canon : GameObject
+class Canon : public GameObject
 {
 public:
 

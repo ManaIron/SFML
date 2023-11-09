@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-class Brick : GameObject
+class Brick : public GameObject
 {
 public:
 

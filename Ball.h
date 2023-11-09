@@ -3,13 +3,12 @@
 #include "GameObject.h"
 #include <vector>
 
-class Ball : GameObject
+class Ball : public GameObject
 {
 public:
 
 
 private:
 
-	std::vector<int> direction;
-	int speed;
+
 };

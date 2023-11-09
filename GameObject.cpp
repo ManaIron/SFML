@@ -30,12 +30,11 @@ GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y
 	form->setOrigin(iLength/2, iHeigth/2);
 }
 
-//constructeur par défaut
-
 GameObject::GameObject()
 {
 
 }
+
 
 GameObject::~GameObject()
 {
@@ -95,7 +94,7 @@ void GameObject::move(float deltaTime)
 {
 	float dirX = direction[0];
 	float dirY = direction[1];
-	float speed = deltaTime * 300.f; // 10 pixels par seconde
+	float speed = deltaTime * 600.f; // 10 pixels par seconde
 	position[0] += dirX * speed;
 	position[1] += dirY * speed;
 
@@ -153,8 +152,8 @@ bool GameObject::detectXCollide(sf::Shape* sForm1)
 	sf::FloatRect boundingBox = sForm1->getGlobalBounds();
 	sf::FloatRect otherBox = form->getGlobalBounds();
 	bool xCollide = false;
-
-	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.1)
+	std::cout << abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) << std::endl;
+	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.5)
 	{
 		xCollide = true;
 	}

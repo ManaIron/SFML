@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
 #include "Game.h"
+#include "Wall.h"
 
 #include <iostream>
 int main()
@@ -14,6 +15,8 @@ int main()
     GameObject rect = GameObject(GameInstance, 100, 50, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
     GameObject brick = GameObject(GameInstance, 75, 30, 500, 100);
     GameObject brick2 = GameObject(GameInstance, 75, 30, 600, 700);
+    Wall walls;
+    walls.createWalls(GameInstance);
 
     sf::Clock clock;
     float deltaTime = 0;
@@ -62,9 +65,10 @@ int main()
         {
             circle.move(deltaTime);
            
-            if (circle.collide(brick.form) == true)
+            if (circle.collide(walls.wall1.form) == true)
             {
-                if (circle.detectXCollide(brick.form))
+                std::cout << "gauche" << std::endl;
+                if (circle.detectXCollide(walls.wall1.form))
                 {
                     circle.reboundX();
                     //Change direction;
@@ -74,9 +78,36 @@ int main()
                     circle.reboundY();
                 }
             }
-            if (circle.collide(brick2.form) == true)
+            if (circle.collide(walls.wall2.form) == true)
             {
-                if (circle.detectXCollide(brick2.form))
+                std::cout << "haut" << std::endl;
+                if (circle.detectXCollide(walls.wall2.form))
+                {
+                    circle.reboundX();
+                    //Change direction;
+                }
+                else
+                {
+                    circle.reboundY();
+                }
+            }
+            if (circle.collide(walls.wall3.form) == true)
+            {
+                std::cout << "droite" << std::endl;
+                if (circle.detectXCollide(walls.wall3.form))
+                {
+                    circle.reboundX();
+                    //Change direction;
+                }
+                else
+                {
+                    circle.reboundY();
+                }
+            }
+            if (circle.collide(walls.wall4.form) == true)
+            {
+                std::cout << "bas" << std::endl;
+                if (circle.detectXCollide(walls.wall4.form))
                 {
                     circle.reboundX();
                     //Change direction;
