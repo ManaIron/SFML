@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 
 class Game
 {
@@ -11,6 +13,8 @@ public:
 	int getHeightScreen();
 
 private:
+
 	int lengthScreen;
 	int heightScreen;
+
 };

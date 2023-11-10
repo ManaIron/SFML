@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 
-
 #include "GameObject.h"
 
 
@@ -16,6 +15,7 @@ GameObject::GameObject(Game GameInstance, int iRadius, int x, int y)
 	sizeY = 2 * iRadius;
 	position = { static_cast<float>(x) , static_cast<float>(y) };
 	form->setOrigin(iRadius, iRadius);
+	form->setFillColor(sf::Color(0,250,0));
 	originDirection = { static_cast<float>(gameAttribut.getLengthScreen() / 2), static_cast<float>(gameAttribut.getHeightScreen()) };
 }
 
@@ -94,7 +94,7 @@ void GameObject::move(float deltaTime)
 {
 	float dirX = direction[0];
 	float dirY = direction[1];
-	float speed = deltaTime * 600.f; // 10 pixels par seconde
+	float speed = deltaTime * 500.f; // 10 pixels par seconde
 	position[0] += dirX * speed;
 	position[1] += dirY * speed;
 
@@ -152,8 +152,8 @@ bool GameObject::detectXCollide(sf::Shape* sForm1)
 	sf::FloatRect boundingBox = sForm1->getGlobalBounds();
 	sf::FloatRect otherBox = form->getGlobalBounds();
 	bool xCollide = false;
-	std::cout << abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) << std::endl;
-	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.5)
+	
+	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.6)
 	{
 		xCollide = true;
 	}

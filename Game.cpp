@@ -11,8 +11,10 @@ Game::Game(int iLengthScreen, int iHeightScreen)
 
 Game::Game()
 {
-
 }
+
+
+
 
 // Gets
 

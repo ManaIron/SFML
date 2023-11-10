@@ -1,23 +1,25 @@
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
 #include "Game.h"
-#include "Wall.h"
+#include "StaticObject.h"
 #include "Brick.h"
 
 #include <iostream>
+
+
+
 int main()
 {
-
-
     Game GameInstance(800, 800);
     sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
     GameObject circle = GameObject(GameInstance, 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() -10);
     GameObject rect = GameObject(GameInstance, 100, 50, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-    Brick brick = Brick(GameInstance, 75, 30, 500, 100, 4);
-    Brick brick2 = Brick(GameInstance, 75, 30, 100, 300, 3);
-    Wall walls;
-    walls.createWalls(GameInstance);
+    //Brick brick = Brick(GameInstance, 75, 30, 500, 100, 4);
+    //Brick brick2 = Brick(GameInstance, 75, 30, 100, 300, 3);
+    StaticObject statics;
+    statics.createWalls(GameInstance);
+    statics.createGrid(GameInstance);
 
     sf::Clock clock;
     float deltaTime = 0;
@@ -61,19 +63,20 @@ int main()
         }
         
         window.clear();
-      
+        
+        static bool checkMove = true;
+
         if (checkClick == true)
         {
-            circle.move(deltaTime);
+            if (checkMove)
+            {
+                circle.move(deltaTime);
+            }
 
-            if (circle.collide(brick.form) == true)
+
+            if (circle.collide(statics.wall1.form) == true)
             {
-                brick.loseLife();
-                if (brick.getNbLife() == 0)
-                {
-                    brick.form->setPosition(-50, -50);
-                }
-                if (circle.detectXCollide(brick.form))
+                if (circle.detectXCollide(statics.wall1.form))
                 {
                     circle.reboundX();
                     //Change direction;
@@ -83,14 +86,9 @@ int main()
                     circle.reboundY();
                 }
             }
-            if (circle.collide(brick2.form) == true)
+            if (circle.collide(statics.wall2.form) == true)
             {
-                brick2.loseLife();
-                if (brick2.getNbLife() == 0)
-                {
-                    brick2.form->setPosition(-50, -50);
-                }
-                if (circle.detectXCollide(brick2.form))
+                if (circle.detectXCollide(statics.wall2.form))
                 {
                     circle.reboundX();
                     //Change direction;
@@ -100,11 +98,9 @@ int main()
                     circle.reboundY();
                 }
             }
-           
-            if (circle.collide(walls.wall1.form) == true)
+            if (circle.collide(statics.wall3.form) == true)
             {
-                std::cout << "gauche" << std::endl;
-                if (circle.detectXCollide(walls.wall1.form))
+                if (circle.detectXCollide(statics.wall3.form))
                 {
                     circle.reboundX();
                     //Change direction;
@@ -114,10 +110,10 @@ int main()
                     circle.reboundY();
                 }
             }
-            if (circle.collide(walls.wall2.form) == true)
+            if (circle.collide(statics.wall4.form) == true)
             {
-                std::cout << "haut" << std::endl;
-                if (circle.detectXCollide(walls.wall2.form))
+                //checkMove = false;
+                if (circle.detectXCollide(statics.wall4.form))
                 {
                     circle.reboundX();
                     //Change direction;
@@ -127,38 +123,44 @@ int main()
                     circle.reboundY();
                 }
             }
-            if (circle.collide(walls.wall3.form) == true)
+            for (int i = 0; i < 15; i++)
             {
-                std::cout << "droite" << std::endl;
-                if (circle.detectXCollide(walls.wall3.form))
+                for (int j = 0; j < 5; j++)
                 {
-                    circle.reboundX();
-                    //Change direction;
-                }
-                else
-                {
-                    circle.reboundY();
-                }
-            }
-            if (circle.collide(walls.wall4.form) == true)
-            {
-                std::cout << "bas" << std::endl;
-                if (circle.detectXCollide(walls.wall4.form))
-                {
-                    circle.reboundX();
-                    //Change direction;
-                }
-                else
-                {
-                    circle.reboundY();
+                
+                    if (circle.collide(statics.grid[i][j].form) == true)
+                    {
+                        if (circle.detectXCollide(statics.grid[i][j].form))
+                        {
+                            circle.reboundX();
+                            //Change direction;
+                        }
+                        else
+                        {
+                            circle.reboundY();
+                        }
+                        statics.grid[i][j].loseLife();
+                    }
+                    if (statics.grid[i][j].getNbLife() == 0)
+                    {
+                        statics.grid[i][j].form->setPosition(-100, -100);
+                    }
+
+
                 }
             }
         }
 
+
         window.draw(*circle.form);
         window.draw(*rect.form);
-        window.draw(*brick.form);
-        window.draw(*brick2.form);
+        for (int i = 0; i < 15; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                window.draw(*statics.grid[i][j].form);
+            }
+        }
 
         window.display();
 

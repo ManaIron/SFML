@@ -6,6 +6,11 @@ Brick::Brick(Game GameInstance, int iLength, int iHeigth, int x, int y, int life
 	nbLife = life;
 }
 
+Brick::Brick() : GameObject()
+{
+}
+
+
 int Brick::getNbLife()
 {
 	return nbLife;
