@@ -7,6 +7,7 @@ class Ball : public GameObject
 {
 public:
 	Ball(Game GameInstance, int iRadius, int x, int y);
+	Ball();
 	~Ball();
 
 

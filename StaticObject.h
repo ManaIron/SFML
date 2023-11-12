@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "Brick.h"
+#include "Ball.h"
 #include "Game.h"
 
 class StaticObject: public GameObject

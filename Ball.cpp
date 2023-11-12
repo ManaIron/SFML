@@ -6,6 +6,11 @@ Ball::Ball(Game GameInstance, int iRadius, int x, int y) : GameObject(GameInstan
 
 }
 
+Ball::Ball()
+{
+
+}
+
 Ball::~Ball()
 {
 
