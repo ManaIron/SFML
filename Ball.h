@@ -10,7 +10,7 @@ public:
 	Ball();
 	~Ball();
 
-
+	void reboundWall(GameObject wall1, GameObject wall2, GameObject wall3);
 private:
 
 };

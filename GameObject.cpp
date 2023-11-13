@@ -128,7 +128,7 @@ float GameObject::calculAngle(int mousePositionX, int mousePositionY)
 	float adjSide = abs(mousePositionX - position[0]);
 	float oppSide = abs(mousePositionY - position[1]);
 
-	float angle = atan(oppSide / adjSide) * 180 / 3.14;
+	float angle = atan(oppSide / adjSide) * 180 / 3.14159265358;
 	if (mousePositionX > position[0])
 	{
 		angle = -angle;
@@ -153,7 +153,7 @@ bool GameObject::detectXCollide(sf::Shape* sForm1)
 	sf::FloatRect otherBox = form->getGlobalBounds();
 	bool xCollide = false;
 	
-	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.6)
+	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 1.f)
 	{
 		xCollide = true;
 	}

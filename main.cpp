@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "StaticObject.h"
 #include "Brick.h"
+#include "Canon.h"
 
 #include <iostream>
 
@@ -10,10 +11,10 @@
 
 int main()
 {
-    Game GameInstance(800, 800);
+    Game GameInstance(1920, 1080);
     sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
-    GameObject rect = GameObject(GameInstance, 100, 50, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()-10); //canon
+    Canon rect = Canon(GameInstance, GameInstance.getLengthScreen()/10, GameInstance.getHeightScreen()/10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 50); //canon
     StaticObject statics;
     Ball ball;
 
@@ -53,7 +54,7 @@ int main()
         {
             if (event.mouseButton.button == sf::Mouse::Left && lock_click != true)
             {
-                ball = Ball(GameInstance, 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()-10);
+                ball = Ball(GameInstance, GameInstance.getHeightScreen()/60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()-50);
                 ball.directionVector(localPosition.x, localPosition.y);
 
                 std::cout << "LETS GOO le cliiicck" << std::endl;
@@ -73,75 +74,44 @@ int main()
                 ball.move(deltaTime);
             }
 
-
-            if (ball.collide(statics.wall1.form) == true)
-            {
-                if (ball.detectXCollide(statics.wall1.form))
-                {
-                    ball.reboundX();
-                    //Change direction;
-                }
-                else
-                {
-                    ball.reboundY();
-                }
-            }
-            if (ball.collide(statics.wall2.form) == true)
-            {
-                if (ball.detectXCollide(statics.wall2.form))
-                {
-                    ball.reboundX();
-                    //Change direction;
-                }
-                else
-                {
-                    ball.reboundY();
-                }
-            }
-            if (ball.collide(statics.wall3.form) == true)
-            {
-                if (ball.detectXCollide(statics.wall3.form))
-                {
-                    ball.reboundX();
-                    //Change direction;
-                }
-                else
-                {
-                    ball.reboundY();
-                }
-            }
+            ball.reboundWall(statics.wall1, statics.wall2, statics.wall3);
+            
             if (ball.collide(statics.wall4.form) == true)
             {
                 checkMove = false;
-                ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 10);
+                ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 50);
 
             }
+
             for (int i = 0; i < 15; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
-                
-                    if (ball.collide(statics.grid[i][j].form) == true)
+                    if (i != 3 and i != 11)
                     {
-                        if (ball.detectXCollide(statics.grid[i][j].form))
+                        if (ball.collide(statics.grid[i][j].form) == true)
                         {
-                            ball.reboundX();
-                            //Change direction;
+                            if (ball.detectXCollide(statics.grid[i][j].form))
+                            {
+                                ball.reboundX();
+                                //ICI CHATGPT
+                                //Change direction;
+                            }
+                            else
+                            {
+                                ball.reboundY();
+                            }
+                            statics.grid[i][j].loseLife();
                         }
-                        else
+                        if (statics.grid[i][j].getNbLife() == 0)
                         {
-                            ball.reboundY();
+                            statics.grid[i][j].form->setPosition(-100, -100);
                         }
-                        statics.grid[i][j].loseLife();
                     }
-                    if (statics.grid[i][j].getNbLife() == 0)
-                    {
-                        statics.grid[i][j].form->setPosition(-100, -100);
-                    }
-
 
                 }
             }
+
             window.draw(*ball.form);
         }
 
@@ -151,7 +121,10 @@ int main()
         {
             for (int j = 0; j < 5; j++)
             {
-                window.draw(*statics.grid[i][j].form);
+                if (i != 3 and i != 11)
+                {
+                    window.draw(*statics.grid[i][j].form);
+                }
             }
         }
 

@@ -15,16 +15,19 @@ void StaticObject::createGrid(Game GameInstance)
 {
 	int sizeX = 15;
 	int sizeY = 5;
-	int lengthBrick = 40;
-	int heightBrick = 20;
-	int ecart = (GameInstance.getLengthScreen() - (lengthBrick*sizeX))/ (sizeX+1);
+	int ecart = 10;
+	int lengthBrick = (GameInstance.getLengthScreen() - (ecart*(sizeX+1)))/sizeX;
+	int heightBrick = ((GameInstance.getHeightScreen()/4)/sizeY) - ecart;
 	grid.resize(sizeX, std::vector<Brick>(sizeY));
 
 	for (int i = 0; i < sizeX; i++)
 	{
 		for (int j = 0; j < sizeY; j++)
 		{
-			grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i*(lengthBrick+ecart)+(lengthBrick/2 +ecart), j * (heightBrick + 10) + 20, 1);
+			if (i !=  3 and i != 11)
+			{
+				grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 2);
+			}
 		}
 	}
 }
