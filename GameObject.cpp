@@ -16,7 +16,7 @@ GameObject::GameObject(Game GameInstance, int iRadius, int x, int y)
 	position = { static_cast<float>(x) , static_cast<float>(y) };
 	form->setOrigin(iRadius, iRadius);
 	form->setFillColor(sf::Color(0,250,0));
-	originDirection = { static_cast<float>(gameAttribut.getLengthScreen() / 2), static_cast<float>(gameAttribut.getHeightScreen()) };
+	originDirection = { static_cast<float>(gameAttribut.getLengthScreen() / 2), static_cast<float>(gameAttribut.getHeightScreen()) -50};
 }
 
 GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y)
@@ -125,14 +125,10 @@ void GameObject::directionVector(int arrivalX, int arrivalY)
 float GameObject::calculAngle(int mousePositionX, int mousePositionY)
 {	
 
-	float adjSide = abs(mousePositionX - position[0]);
-	float oppSide = abs(mousePositionY - position[1]);
+	float adjSide = mousePositionX - position[0];
+	float oppSide = mousePositionY - position[1];
 
-	float angle = atan(oppSide / adjSide) * 180 / 3.14159265358;
-	if (mousePositionX > position[0])
-	{
-		angle = -angle;
-	}
+	float angle = atan(oppSide / adjSide) * 180 / 3.14;
 	return angle;
 }
 

@@ -10,11 +10,11 @@
 
 
 int main()
-{
-    Game GameInstance(1920, 1080);
+{   
+    Game GameInstance(1950, 1080);
     sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
-    Canon rect = Canon(GameInstance, GameInstance.getLengthScreen()/10, GameInstance.getHeightScreen()/10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 50); //canon
+    Canon rect = Canon(GameInstance, GameInstance.getLengthScreen()/10, GameInstance.getHeightScreen()/20, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 50); //canon
     StaticObject statics;
     Ball ball;
 
@@ -83,32 +83,36 @@ int main()
 
             }
 
-            for (int i = 0; i < 15; i++)
+            bool hasCollided = false;
+
+            for (int j = 0; j < 5; j++)
             {
-                for (int j = 0; j < 5; j++)
+                for (int i = 0; i < 15; i++)
                 {
                     if (i != 3 and i != 11)
                     {
                         if (ball.collide(statics.grid[i][j].form) == true)
-                        {
-                            if (ball.detectXCollide(statics.grid[i][j].form))
+                        {   
+                            if (ball.detectXCollide(statics.grid[i][j].form) and !hasCollided)
                             {
                                 ball.reboundX();
-                                //ICI CHATGPT
                                 //Change direction;
                             }
-                            else
+                            else if (!hasCollided)
                             {
                                 ball.reboundY();
                             }
+
+                            hasCollided = true;
                             statics.grid[i][j].loseLife();
+                            statics.grid[i][j].changeColor();
+                            //break;
                         }
-                        if (statics.grid[i][j].getNbLife() == 0)
+                        if (statics.grid[i][j].getNbLife() <= 0)
                         {
                             statics.grid[i][j].form->setPosition(-100, -100);
                         }
                     }
-
                 }
             }
 

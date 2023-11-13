@@ -17,7 +17,27 @@ int Brick::getNbLife()
 }
 
 
+
 void Brick::loseLife()
 {
 	nbLife = nbLife - 1;
+}
+
+void Brick::changeColor()
+{
+	switch (nbLife)
+	{
+	case 1:
+		form->setFillColor(sf::Color(255,0,0));
+		break;
+	case 2:
+		form->setFillColor(sf::Color(255, 165, 0));
+		break;
+	case 3:
+		form->setFillColor(sf::Color(255,255,0));
+		break;
+	case 4:
+		form->setFillColor(sf::Color(0, 255, 0));
+		break;
+	}
 }

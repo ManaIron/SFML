@@ -10,6 +10,7 @@ public:
 
 	int getNbLife();
 	void loseLife();
+	void changeColor();
 
 private:
 

@@ -26,7 +26,29 @@ void StaticObject::createGrid(Game GameInstance)
 		{
 			if (i !=  3 and i != 11)
 			{
-				grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 2);
+				switch (j)
+				{
+				case 0:
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 1);
+					grid[i][j].changeColor();
+					break;
+				case 1 :
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 2);
+					grid[i][j].changeColor();
+					break;
+				case 2:
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 2);
+					grid[i][j].changeColor();
+					break;
+				case 3:
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 3);
+					grid[i][j].changeColor();
+					break;
+				case 4:
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 4);
+					grid[i][j].changeColor();
+					break;
+				}
 			}
 		}
 	}
