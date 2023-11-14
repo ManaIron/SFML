@@ -7,14 +7,14 @@ void StaticObject::createWalls(Game GameInstance)
 	wall1 = GameObject(GameInstance, 10, GameInstance.getHeightScreen(), -5, GameInstance.getHeightScreen() / 2);
 	wall2 = GameObject(GameInstance, GameInstance.getLengthScreen(),10, GameInstance.getLengthScreen() / 2, -5);
 	wall3 = GameObject(GameInstance, 10, GameInstance.getHeightScreen(), GameInstance.getLengthScreen() + 5, GameInstance.getHeightScreen() / 2);
-	wall4 = GameObject(GameInstance, GameInstance.getLengthScreen(), 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() + 5);
+	wall4 = GameObject(GameInstance, GameInstance.getLengthScreen(), 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() + 55);
 }
 
 
 void StaticObject::createGrid(Game GameInstance)
 {
-	int sizeX = 15;
-	int sizeY = 5;
+	int sizeX = 1;
+	int sizeY = 1;
 	int ecart = 10;
 	int lengthBrick = (GameInstance.getLengthScreen() - (ecart*(sizeX+1)))/sizeX;
 	int heightBrick = ((GameInstance.getHeightScreen()/4)/sizeY) - ecart;
@@ -29,29 +29,50 @@ void StaticObject::createGrid(Game GameInstance)
 				switch (j)
 				{
 				case 0:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 1);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 1);
 					grid[i][j].changeColor();
 					break;
 				case 1 :
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 2);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 2);
 					grid[i][j].changeColor();
 					break;
 				case 2:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 2);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 2);
 					grid[i][j].changeColor();
 					break;
 				case 3:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 3);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 3);
 					grid[i][j].changeColor();
 					break;
 				case 4:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 20, 4);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 4);
 					grid[i][j].changeColor();
 					break;
 				}
 			}
+			else
+			{
+				grid[i][j] = Brick(GameInstance, 10, 10, -100, -100, 2);
+			}
 		}
 	}
+}
+
+
+bool StaticObject::checkEndGame()
+{
+	bool end = true;
+	for (int i = 0; i < grid.size(); i++)
+	{
+		for (int j = 0; j < grid[0].size(); j++)
+		{
+			if (grid[i][j].form->getPosition().x >= 0 and grid[i][j].form->getPosition().y >= 0)
+			{
+				end = false;
+			}
+		}
+	}
+	return end;
 }
 
 

@@ -27,11 +27,11 @@ public:
 
 	sf::Shape* form; //Definit une adresse
 
-	float calculAngle(int mousePositionX, int mousePositionY);
 	void directionVector(int mousePositionX, int mousePositionY);
 	void reboundX();
 	void reboundY();
 	bool detectXCollide(sf::Shape* sForm1);
+
 
 private:
 

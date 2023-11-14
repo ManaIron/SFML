@@ -11,6 +11,7 @@ public:
 
 	void createWalls(Game GameInstance);
 	void createGrid(Game GameInstance);
+	bool checkEndGame();
 
 	GameObject wall1;
 	GameObject wall2;

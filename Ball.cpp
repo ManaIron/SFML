@@ -60,42 +60,42 @@ void Ball::reboundWall(GameObject wall1, GameObject wall2, GameObject wall3)
 }
 
 
-//void Ball::reboundBrick(std::vector<std::vector<Brick>> grid)
-//{
-//    bool hasCollided = false;
-//
-//    int sizeX = 15;
-//    int sizeY = 5;
-//
-//    grid.resize(sizeX, std::vector<Brick>(sizeY));
-//
-//    for (int j = 0; j < 5; j++)
-//    {
-//        for (int i = 0; i < 15; i++)
-//        {
-//            if (i != 3 and i != 11)
-//            {
-//                if (collide(grid[i][j].form) == true)
-//                {
-//                    if (detectXCollide(grid[i][j].form) and !hasCollided)
-//                    {
-//                        reboundX();
-//                        //Change direction;
-//                    }
-//                    else if (!hasCollided)
-//                    {
-//                        reboundY();
-//                    }
-//
-//                    hasCollided = true;
-//                    grid[i][j].loseLife();
-//                    grid[i][j].changeColor();
-//                }
-//                if (grid[i][j].getNbLife() <= 0)
-//                {
-//                    grid[i][j].form->setPosition(-100, -100);
-//                }
-//            }
-//        }
-//    }
-//}
+std::vector<std::vector<Brick>> Ball::reboundBrick(std::vector<std::vector<Brick>> grid, int sizeX, int sizeY)
+{
+    std::vector < std::vector<Brick>> finalGrid;
+    bool hasCollided = false;
+
+    finalGrid.resize(sizeX, std::vector<Brick>(sizeY));
+    grid.resize(sizeX, std::vector<Brick>(sizeY));
+
+    for (int j = 0; j < sizeY; j++)
+    {
+        for (int i = 0; i < sizeX; i++)
+        {
+
+            if (collide(grid[i][j].form) == true)
+            {
+                if (detectXCollide(grid[i][j].form) and !hasCollided)
+                {
+                    reboundX();
+                    //Change direction;
+                }
+                else if (!hasCollided)
+                {
+                    reboundY();
+                }
+
+                hasCollided = true;
+                grid[i][j].loseLife();
+                grid[i][j].changeColor();
+            }
+            if (grid[i][j].getNbLife() <= 0)
+            {
+                grid[i][j].form->setPosition(-100, -100);
+            }
+
+        }
+    }
+    finalGrid = grid;
+    return finalGrid;
+}

@@ -14,7 +14,7 @@ int main()
     Game GameInstance(1950, 1080);
     sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
-    Canon rect = Canon(GameInstance, GameInstance.getLengthScreen()/10, GameInstance.getHeightScreen()/20, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 50); //canon
+    Canon canonObj = Canon(GameInstance, GameInstance.getLengthScreen()/10, GameInstance.getHeightScreen()/20, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()); //canon
     StaticObject statics;
     Ball ball;
 
@@ -23,13 +23,12 @@ int main()
 
     sf::Clock clock;
     float deltaTime = 0;
+    bool end = false;
 
     while (window.isOpen())
     {
         sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-        //std::cout << localPosition.x << "et" << localPosition.y << std::endl;
-        //std::cout << rect.calculAngle(localPosition.x, localPosition.y) << std::endl;
-        rect.rotate(rect.calculAngle(localPosition.x, localPosition.y));
+        canonObj.rotate(canonObj.calculAngle(localPosition.x, localPosition.y));
         
 
         sf::Event event;
@@ -41,28 +40,38 @@ int main()
             }
         }
 
-        static bool lock_click;
+        static bool lock_leftClick;
+        static bool lock_rightClick;
         static bool checkClick;
         static bool checkMove = true;
 
-        // Pendant le clique de la souris
-        if (event.type != sf::Event::MouseButtonPressed and !checkMove)
+
+        if (event.type != sf::Event::MouseButtonPressed and !checkMove and !statics.checkEndGame())
         {
-            lock_click = false;
+            lock_leftClick = false;
+            lock_rightClick = false;
+
         }
         if (event.type == sf::Event::MouseButtonPressed)
         {
-            if (event.mouseButton.button == sf::Mouse::Left && lock_click != true)
+            // Left Click de la Souris pour lancer une seule balle (balle par balle)
+            if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick )
             {
-                ball = Ball(GameInstance, GameInstance.getHeightScreen()/60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()-50);
+                ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+
                 ball.directionVector(localPosition.x, localPosition.y);
 
                 std::cout << "LETS GOO le cliiicck" << std::endl;
-                lock_click = true;
+                lock_leftClick = true;
                 checkClick = true;
                 checkMove = true;
             }
+
+            // Right Click de la souris qui envoie 10 balles max à la fois 
+
+
         }
+
         
         window.clear();
         
@@ -79,65 +88,78 @@ int main()
             if (ball.collide(statics.wall4.form) == true)
             {
                 checkMove = false;
-                ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 50);
+                ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
 
             }
 
-            //ball.reboundBrick(statics.grid);
-
-            bool hasCollided = false;
-
-            for (int j = 0; j < 5; j++)
-            {
-                for (int i = 0; i < 15; i++)
-                {
-                    if (i != 3 and i != 11)
-                    {
-                        if (ball.collide(statics.grid[i][j].form) == true)
-                        {   
-                            if (ball.detectXCollide(statics.grid[i][j].form) and !hasCollided)
-                            {
-                                ball.reboundX();
-                                //Change direction;
-                            }
-                            else if (!hasCollided)
-                            {
-                                ball.reboundY();
-                            }
-
-                            hasCollided = true;
-                            statics.grid[i][j].loseLife();
-                            statics.grid[i][j].changeColor();
-                            //break;
-                        }
-                        if (statics.grid[i][j].getNbLife() <= 0)
-                        {
-                            statics.grid[i][j].form->setPosition(-100, -100);
-                        }
-                    }
-                }
-            }
+            statics.grid = ball.reboundBrick(statics.grid, statics.grid.size(), statics.grid[0].size());
 
             window.draw(*ball.form);
         }
 
 
-        window.draw(*rect.form);
-        for (int i = 0; i < 15; i++)
+        window.draw(*canonObj.form);
+        for (int i = 0; i < statics.grid.size(); i++)
         {
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < statics.grid[0].size(); j++)
             {
-                if (i != 3 and i != 11)
-                {
-                    window.draw(*statics.grid[i][j].form);
-                }
+                window.draw(*statics.grid[i][j].form);
             }
         }
 
         window.display();
         deltaTime = clock.restart().asSeconds();
 
+        if (statics.checkEndGame())
+        {
+            end = true;
+            window.close();
+            break;
+        }
     }
-    
+
+    if (end)
+    {
+        sf::RenderWindow victoryWindow(sf::VideoMode(1960, 1080), "VICTORY");
+        sf::Font font;
+        sf::Font font2;
+        font.loadFromFile("Aiden-v7DO.otf");  // Remplacez "arial.ttf" par le chemin de votre police de caractères
+        font2.loadFromFile("BALLOON DREAMS.ttf");
+        //"inflateptxRegular-Wyg8v.ttf"
+        sf::Text victoryText;
+        sf::Text ggText;
+        victoryText.setFont(font);
+        ggText.setFont(font2);
+        victoryText.setString("Victory!");
+        ggText.setString("GG");
+        victoryText.setCharacterSize(100);
+        ggText.setCharacterSize(100);
+        victoryText.setFillColor(sf::Color::White);
+        ggText.setFillColor(sf::Color::White);
+        victoryText.setStyle(sf::Text::Bold);
+        ggText.setStyle(sf::Text::Bold);
+
+        // Centrez le texte dans la fenêtre de victoire
+        victoryText.setPosition((1960 - victoryText.getGlobalBounds().width) / 2, (1080 - victoryText.getGlobalBounds().height) / 2 -20);
+        ggText.setPosition((1960 - ggText.getGlobalBounds().width) / 2, (1080 - ggText.getGlobalBounds().height) / 2 + victoryText.getGlobalBounds().height + 20);
+
+        while (victoryWindow.isOpen())
+        {
+            sf::Event victoryEvent;
+            while (victoryWindow.pollEvent(victoryEvent))
+            {
+                if (victoryEvent.type == sf::Event::Closed)
+                {
+                    victoryWindow.close();
+                }
+            }
+
+            victoryWindow.clear(sf::Color(255,155,155));  // Couleur grise de fond
+            victoryWindow.draw(victoryText);
+            victoryWindow.draw(ggText);
+            victoryWindow.display();
+        }
+    }
+
     return 0;
 }
