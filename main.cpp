@@ -46,7 +46,7 @@ int main()
         static bool checkMove = true;
 
         // Pendant le clique de la souris
-        if (event.type != sf::Event::MouseButtonPressed)
+        if (event.type != sf::Event::MouseButtonPressed and !checkMove)
         {
             lock_click = false;
         }
@@ -82,6 +82,8 @@ int main()
                 ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen() - 50);
 
             }
+
+            //ball.reboundBrick(statics.grid);
 
             bool hasCollided = false;
 
@@ -133,7 +135,6 @@ int main()
         }
 
         window.display();
-
         deltaTime = clock.restart().asSeconds();
 
     }

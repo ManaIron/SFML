@@ -149,7 +149,7 @@ bool GameObject::detectXCollide(sf::Shape* sForm1)
 	sf::FloatRect otherBox = form->getGlobalBounds();
 	bool xCollide = false;
 	
-	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 1.f)
+	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.5f)
 	{
 		xCollide = true;
 	}
