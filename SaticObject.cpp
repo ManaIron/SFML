@@ -13,13 +13,20 @@ void StaticObject::createWalls(Game GameInstance)
 
 void StaticObject::createGrid(Game GameInstance)
 {
-	int sizeX = 1;
-	int sizeY = 1;
+	int sizeX = 15;
+	int sizeY = 5;
 	int ecart = 10;
 	int lengthBrick = (GameInstance.getLengthScreen() - (ecart*(sizeX+1)))/sizeX;
 	int heightBrick = ((GameInstance.getHeightScreen()/4)/sizeY) - ecart;
 	grid.resize(sizeX, std::vector<Brick>(sizeY));
 
+	sf::Texture texture;
+	if (!texture.loadFromFile("block1.png"))
+	{
+		std::cout << "ERROR:loadTexture" << std::endl;
+	}
+	texture.loadFromFile("block1.png");
+	
 	for (int i = 0; i < sizeX; i++)
 	{
 		for (int j = 0; j < sizeY; j++)
@@ -29,23 +36,23 @@ void StaticObject::createGrid(Game GameInstance)
 				switch (j)
 				{
 				case 0:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 1);
-					grid[i][j].changeColor();
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 150, 1);
+					grid[i][j].form->setTexture(&texture);
 					break;
 				case 1 :
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 2);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 150, 2);
 					grid[i][j].changeColor();
 					break;
 				case 2:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 2);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 150, 2);
 					grid[i][j].changeColor();
 					break;
 				case 3:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 3);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 150, 3);
 					grid[i][j].changeColor();
 					break;
 				case 4:
-					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 30, 4);
+					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 150, 4);
 					grid[i][j].changeColor();
 					break;
 				}

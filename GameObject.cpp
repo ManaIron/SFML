@@ -93,7 +93,7 @@ void GameObject::move(float deltaTime)
 {
 	float dirX = direction[0];
 	float dirY = direction[1];
-	float speed = deltaTime * 500.f; // 10 pixels par seconde
+	float speed = deltaTime * 400.f; // 10 pixels par seconde
 	position[0] += dirX * speed;
 	position[1] += dirY * speed;
 
@@ -138,9 +138,10 @@ bool GameObject::detectXCollide(sf::Shape* sForm1)
 	sf::FloatRect otherBox = form->getGlobalBounds();
 	bool xCollide = false;
 	
-	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 0.5f)
+	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 1.5f)
 	{
 		xCollide = true;
 	}
 	return xCollide;
 }
+

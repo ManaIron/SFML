@@ -10,11 +10,11 @@
 
 
 int main()
-{   
+{
     Game GameInstance(1950, 1080);
     sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
-    Canon canonObj = Canon(GameInstance, GameInstance.getLengthScreen()/10, GameInstance.getHeightScreen()/20, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()); //canon
+    Canon canonObj = Canon(GameInstance, GameInstance.getLengthScreen() / 10, GameInstance.getHeightScreen() / 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()); //canon
     StaticObject statics;
     Ball ball;
 
@@ -25,11 +25,18 @@ int main()
     float deltaTime = 0;
     bool end = false;
 
+    sf::Texture texture;
+    if (!texture.loadFromFile("arbaletev2.jpg"))
+    {
+        std::cout << "ERROR:loadTexture" << std::endl;
+    }
+    texture.loadFromFile("arbaletev2.jpg");
+
     while (window.isOpen())
     {
         sf::Vector2i localPosition = sf::Mouse::getPosition(window);
         canonObj.rotate(canonObj.calculAngle(localPosition.x, localPosition.y));
-        
+
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -55,13 +62,13 @@ int main()
         if (event.type == sf::Event::MouseButtonPressed)
         {
             // Left Click de la Souris pour lancer une seule balle (balle par balle)
-            if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick )
+            if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick)
             {
                 ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
 
                 ball.directionVector(localPosition.x, localPosition.y);
 
-                std::cout << "LETS GOO le cliiicck" << std::endl;
+                std::cout << "LETS GOO le cliiicck gaughe" << std::endl;
                 lock_leftClick = true;
                 checkClick = true;
                 checkMove = true;
@@ -69,12 +76,22 @@ int main()
 
             // Right Click de la souris qui envoie 10 balles max à la fois 
 
+            if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick)
+            {
+                ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
 
+                ball.directionVector(localPosition.x, localPosition.y);
+
+                std::cout << "LETS GOO le cliiicck droit" << std::endl;
+                lock_rightClick = true;
+                checkClick = true;
+                checkMove = true;
+            }
         }
 
-        
+
         window.clear();
-        
+
 
         if (checkClick)
         {
@@ -84,7 +101,7 @@ int main()
             }
 
             ball.reboundWall(statics.wall1, statics.wall2, statics.wall3);
-            
+
             if (ball.collide(statics.wall4.form) == true)
             {
                 checkMove = false;
@@ -97,8 +114,9 @@ int main()
             window.draw(*ball.form);
         }
 
-
+        canonObj.form->setTexture(&texture);
         window.draw(*canonObj.form);
+
         for (int i = 0; i < statics.grid.size(); i++)
         {
             for (int j = 0; j < statics.grid[0].size(); j++)
@@ -140,7 +158,7 @@ int main()
         ggText.setStyle(sf::Text::Bold);
 
         // Centrez le texte dans la fenêtre de victoire
-        victoryText.setPosition((1960 - victoryText.getGlobalBounds().width) / 2, (1080 - victoryText.getGlobalBounds().height) / 2 -20);
+        victoryText.setPosition((1960 - victoryText.getGlobalBounds().width) / 2, (1080 - victoryText.getGlobalBounds().height) / 2 - 20);
         ggText.setPosition((1960 - ggText.getGlobalBounds().width) / 2, (1080 - ggText.getGlobalBounds().height) / 2 + victoryText.getGlobalBounds().height + 20);
 
         while (victoryWindow.isOpen())
@@ -154,7 +172,7 @@ int main()
                 }
             }
 
-            victoryWindow.clear(sf::Color(255,155,155));  // Couleur grise de fond
+            victoryWindow.clear(sf::Color(255, 155, 155));  // Couleur grise de fond
             victoryWindow.draw(victoryText);
             victoryWindow.draw(ggText);
             victoryWindow.display();
