@@ -16,13 +16,11 @@ int main()
 
     Canon canonObj = Canon(GameInstance, GameInstance.getLengthScreen() / 10, GameInstance.getHeightScreen() / 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()); //canon
     StaticObject statics;
-    Ball ball;
+    Ball ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+    Ball ball1 = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
 
     std::vector<Ball> listBall = {};
-    for (int i = 0; i < 5; i++)
-    {
-        listBall.push_back(ball);
-    }
+    std::vector<Ball> listBall_used = {};
 
     statics.createWalls(GameInstance);
     statics.createGrid(GameInstance);
@@ -62,16 +60,24 @@ int main()
         if (event.type != sf::Event::MouseButtonPressed and !checkMove and !statics.checkEndGame())
         {
             lock_leftClick = false;
+        }
+        if (event.type != sf::Event::MouseButtonPressed and !statics.checkEndGame())
+        {
             lock_rightClick = false;
-
         }
         if (event.type == sf::Event::MouseButtonPressed)
         {
             // Left Click de la Souris pour lancer une seule balle (balle par balle)
             if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick)
             {
-                ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-                ball.directionVector(localPosition.x, localPosition.y);
+                //ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+                ball.form->setFillColor(sf::Color(255, 255, 255));
+                listBall_used = { ball };
+
+                for (int i = 0; i < listBall_used.size(); i++)
+                {
+                    listBall_used[i].directionVector(localPosition.x, localPosition.y);
+                }
 
                 std::cout << "LETS GOO le cliiicck gaughe" << std::endl;
                 lock_leftClick = true;
@@ -83,8 +89,38 @@ int main()
 
             if (event.mouseButton.button == sf::Mouse::Right && !lock_rightClick)
             {
-        
-                ball.directionVector(localPosition.x, localPosition.y);
+                
+                ball1.form->setFillColor(sf::Color(0, 0, 255));
+
+                listBall_used = { ball1, ball1, ball1, ball1, ball1 };
+
+                /*for (int i = 0; i < listBall.size(); i++)
+                {
+                    if (listBall[i].form->getPosition().x == GameInstance.getLengthScreen() / 2 and listBall[i].form->getPosition().y == GameInstance.getHeightScreen())
+                    {
+                        for (int j = i; j >= 0; j--)
+                        {
+                            listBall_used = {listBall[i-j]};
+                        }
+                        break;
+                    }
+                }*/
+
+
+                for (int j = 0; j < listBall_used.size(); j++)
+                {
+                    listBall_used[j].directionVector(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+                }
+
+                for (int i = 0; i < listBall_used.size(); i++)
+                {
+                    if (listBall_used[i].form->getPosition().x == GameInstance.getLengthScreen() / 2 and listBall_used[i].form->getPosition().y == GameInstance.getHeightScreen())
+                    {
+                        listBall_used[i].directionVector(localPosition.x, localPosition.y);
+                        break;
+                    }
+                }
+                
 
                 std::cout << "LETS GOO le cliiicck droit" << std::endl;
                 lock_rightClick = true;
@@ -101,24 +137,29 @@ int main()
         {
             if (checkMove)
             {
-                ball.move(deltaTime);
+                for (int i = 0; i < listBall_used.size(); i++)
+                {
+                    listBall_used[i].move(deltaTime);
+                }
             }
 
-         
-            ball.reboundWall(statics.wall1, statics.wall2, statics.wall3);
-
-            if (ball.collide(statics.wall4.form) == true)
+            for (int i = 0; i < listBall_used.size(); i++)
             {
-                checkMove = false;
-                ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-            }
+                listBall_used[i].reboundWall(statics.wall1, statics.wall2, statics.wall3);
 
-            if (!ball.hasCollided)
-            {
-                statics.grid = ball.reboundBrick(statics.grid, statics.grid.size(), statics.grid[0].size());
-            }
+                if (listBall_used[i].collide(statics.wall4.form) == true)
+                {
+                    checkMove = false;
+                    listBall_used[i].form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+                }
 
-            window.draw(*ball.form);
+                if (!listBall_used[i].hasCollided)
+                {
+                    statics.grid = listBall_used[i].reboundBrick(statics.grid, statics.grid.size(), statics.grid[0].size());
+                }
+
+                window.draw(*listBall_used[i].form);
+            }
         }
 
         canonObj.form->setTexture(&texture);
@@ -150,7 +191,6 @@ int main()
         sf::Font font2;
         font.loadFromFile("Aiden-v7DO.otf");  // Remplacez "arial.ttf" par le chemin de votre police de caractères
         font2.loadFromFile("BALLOON DREAMS.ttf");
-        //"inflateptxRegular-Wyg8v.ttf"
         sf::Text victoryText;
         sf::Text ggText;
         victoryText.setFont(font);
@@ -179,7 +219,7 @@ int main()
                 }
             }
 
-            victoryWindow.clear(sf::Color(255, 155, 155)); 
+            victoryWindow.clear(sf::Color(255, 155, 155));
             victoryWindow.draw(victoryText);
             victoryWindow.draw(ggText);
             victoryWindow.display();
@@ -187,4 +227,5 @@ int main()
     }
 
     return 0;
+
 }
