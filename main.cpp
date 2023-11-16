@@ -11,12 +11,18 @@
 
 int main()
 {
-    Game GameInstance(1950, 1080);
+    Game GameInstance(1920, 1080);
     sf::RenderWindow window(sf::VideoMode(GameInstance.getLengthScreen(), GameInstance.getHeightScreen()), "Break them all");
 
     Canon canonObj = Canon(GameInstance, GameInstance.getLengthScreen() / 10, GameInstance.getHeightScreen() / 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()); //canon
     StaticObject statics;
     Ball ball;
+
+    std::vector<Ball> listBall = {};
+    for (int i = 0; i < 5; i++)
+    {
+        listBall.push_back(ball);
+    }
 
     statics.createWalls(GameInstance);
     statics.createGrid(GameInstance);
@@ -65,7 +71,6 @@ int main()
             if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick)
             {
                 ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-
                 ball.directionVector(localPosition.x, localPosition.y);
 
                 std::cout << "LETS GOO le cliiicck gaughe" << std::endl;
@@ -76,10 +81,9 @@ int main()
 
             // Right Click de la souris qui envoie 10 balles max à la fois 
 
-            if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick)
+            if (event.mouseButton.button == sf::Mouse::Right && !lock_rightClick)
             {
-                ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-
+        
                 ball.directionVector(localPosition.x, localPosition.y);
 
                 std::cout << "LETS GOO le cliiicck droit" << std::endl;
@@ -100,16 +104,19 @@ int main()
                 ball.move(deltaTime);
             }
 
+         
             ball.reboundWall(statics.wall1, statics.wall2, statics.wall3);
 
             if (ball.collide(statics.wall4.form) == true)
             {
                 checkMove = false;
                 ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-
             }
 
-            statics.grid = ball.reboundBrick(statics.grid, statics.grid.size(), statics.grid[0].size());
+            if (!ball.hasCollided)
+            {
+                statics.grid = ball.reboundBrick(statics.grid, statics.grid.size(), statics.grid[0].size());
+            }
 
             window.draw(*ball.form);
         }
@@ -172,7 +179,7 @@ int main()
                 }
             }
 
-            victoryWindow.clear(sf::Color(255, 155, 155));  // Couleur grise de fond
+            victoryWindow.clear(sf::Color(255, 155, 155)); 
             victoryWindow.draw(victoryText);
             victoryWindow.draw(ggText);
             victoryWindow.display();

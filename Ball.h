@@ -12,8 +12,11 @@ public:
 	Ball();
 	~Ball();
 
+	bool hasCollided = false;
+
 	void reboundWall(GameObject wall1, GameObject wall2, GameObject wall3);
 	std::vector<std::vector<Brick>> reboundBrick(std::vector<std::vector<Brick>> grid, int sizeX, int sizeY);
+
 private:
 
 };
