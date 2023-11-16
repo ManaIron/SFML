@@ -13,5 +13,9 @@ float Canon::calculAngle(int mousePositionX, int mousePositionY)
 	float oppSide = mousePositionY - getPosition()[1];
 
 	float angle = atan(oppSide / adjSide) * 180 / 3.14;
+	if (mousePositionX - getPosition()[0] < 0)
+	{
+		angle += 180;
+	}
 	return angle;
 }

@@ -20,12 +20,12 @@ void StaticObject::createGrid(Game GameInstance)
 	int heightBrick = ((GameInstance.getHeightScreen()/4)/sizeY) - ecart;
 	grid.resize(sizeX, std::vector<Brick>(sizeY));
 
-	sf::Texture texture;
+	/*sf::Texture texture;
 	if (!texture.loadFromFile("block1.png"))
 	{
 		std::cout << "ERROR:loadTexture" << std::endl;
 	}
-	texture.loadFromFile("block1.png");
+	texture.loadFromFile("block1.png");*/
 	
 	for (int i = 0; i < sizeX; i++)
 	{
@@ -37,7 +37,7 @@ void StaticObject::createGrid(Game GameInstance)
 				{
 				case 0:
 					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 150, 1);
-					grid[i][j].form->setTexture(&texture);
+					grid[i][j].changeColor();
 					break;
 				case 1 :
 					grid[i][j] = Brick(GameInstance, lengthBrick, heightBrick, i * (lengthBrick + ecart) + (lengthBrick / 2 + ecart), j * (heightBrick + 10) + 150, 2);
