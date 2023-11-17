@@ -1,4 +1,6 @@
 #pragma once
+
+#include <SFML/Graphics.hpp>
 #include <vector>
 
 
@@ -11,6 +13,8 @@ public:
 
 	int getLengthScreen();
 	int getHeightScreen();
+
+	void endGame();
 
 private:
 

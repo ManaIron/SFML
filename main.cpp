@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+
 #include "GameObject.h"
 #include "Game.h"
 #include "StaticObject.h"
@@ -78,14 +78,15 @@ int main()
                 {
                     listBall_used[i].directionVector(localPosition.x, localPosition.y);
                 }
-
-                std::cout << "LETS GOO le cliiicck gaughe" << std::endl;
+                std::cout << "LETS GOO le cliiicck gauche" << std::endl;
                 lock_leftClick = true;
                 checkClick = true;
                 checkMove = true;
             }
 
-            // Right Click de la souris qui envoie 10 balles max à la fois 
+
+
+            // Right Click de la souris qui envoie 5 balles max à la fois 
 
             if (event.mouseButton.button == sf::Mouse::Right && !lock_rightClick)
             {
@@ -106,7 +107,6 @@ int main()
                     }
                 }*/
 
-
                 for (int j = 0; j < listBall_used.size(); j++)
                 {
                     listBall_used[j].directionVector(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
@@ -120,15 +120,30 @@ int main()
                         break;
                     }
                 }
-                
 
-                std::cout << "LETS GOO le cliiicck droit" << std::endl;
                 lock_rightClick = true;
                 checkClick = true;
                 checkMove = true;
             }
         }
 
+        static bool lock_space;
+        /*if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        {
+            lock_space = false;
+        }*/
+        
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) and !lock_space)
+        {
+            for (int i = 0; i < listBall_used.size(); i++)
+            {
+                listBall_used[i].directionVector(listBall_used[i].form->getPosition().x, listBall_used[i].form->getPosition().y);
+            }
+            lock_space = true;
+        }
+
+
+        // Start of the gaming tools -----------------------------------------------------
 
         window.clear();
 
@@ -186,44 +201,7 @@ int main()
 
     if (end)
     {
-        sf::RenderWindow victoryWindow(sf::VideoMode(1960, 1080), "VICTORY");
-        sf::Font font;
-        sf::Font font2;
-        font.loadFromFile("Aiden-v7DO.otf");  // Remplacez "arial.ttf" par le chemin de votre police de caractères
-        font2.loadFromFile("BALLOON DREAMS.ttf");
-        sf::Text victoryText;
-        sf::Text ggText;
-        victoryText.setFont(font);
-        ggText.setFont(font2);
-        victoryText.setString("Victory!");
-        ggText.setString("GG");
-        victoryText.setCharacterSize(100);
-        ggText.setCharacterSize(100);
-        victoryText.setFillColor(sf::Color::White);
-        ggText.setFillColor(sf::Color::White);
-        victoryText.setStyle(sf::Text::Bold);
-        ggText.setStyle(sf::Text::Bold);
-
-        // Centrez le texte dans la fenêtre de victoire
-        victoryText.setPosition((1960 - victoryText.getGlobalBounds().width) / 2, (1080 - victoryText.getGlobalBounds().height) / 2 - 20);
-        ggText.setPosition((1960 - ggText.getGlobalBounds().width) / 2, (1080 - ggText.getGlobalBounds().height) / 2 + victoryText.getGlobalBounds().height + 20);
-
-        while (victoryWindow.isOpen())
-        {
-            sf::Event victoryEvent;
-            while (victoryWindow.pollEvent(victoryEvent))
-            {
-                if (victoryEvent.type == sf::Event::Closed)
-                {
-                    victoryWindow.close();
-                }
-            }
-
-            victoryWindow.clear(sf::Color(255, 155, 155));
-            victoryWindow.draw(victoryText);
-            victoryWindow.draw(ggText);
-            victoryWindow.display();
-        }
+        GameInstance.endGame();
     }
 
     return 0;
