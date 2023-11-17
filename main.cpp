@@ -8,7 +8,6 @@
 #include <iostream>
 
 
-
 int main()
 {
     Game GameInstance(1920, 1080);
@@ -16,11 +15,11 @@ int main()
 
     Canon canonObj = Canon(GameInstance, GameInstance.getLengthScreen() / 10, GameInstance.getHeightScreen() / 10, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen()); //canon
     StaticObject statics;
-    Ball ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-    Ball ball1 = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
 
-    std::vector<Ball> listBall = {};
-    std::vector<Ball> listBall_used = {};
+    Ball ball;
+    Ball ball1;
+
+    std::vector<Ball> listBall_used;
 
     statics.createWalls(GameInstance);
     statics.createGrid(GameInstance);
@@ -55,6 +54,7 @@ int main()
         static bool lock_rightClick;
         static bool checkClick;
         static bool checkMove = true;
+        static std::vector<bool> checkMove_right;
 
 
         if (event.type != sf::Event::MouseButtonPressed and !checkMove and !statics.checkEndGame())
@@ -70,15 +70,12 @@ int main()
             // Left Click de la Souris pour lancer une seule balle (balle par balle)
             if (event.mouseButton.button == sf::Mouse::Left && !lock_leftClick)
             {
-                //ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+                ball = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
                 ball.form->setFillColor(sf::Color(255, 255, 255));
-                listBall_used = { ball };
 
-                for (int i = 0; i < listBall_used.size(); i++)
-                {
-                    listBall_used[i].directionVector(localPosition.x, localPosition.y);
-                }
-                std::cout << "LETS GOO le cliiicck gauche" << std::endl;
+                ball.directionVector(localPosition.x, localPosition.y);
+
+
                 lock_leftClick = true;
                 checkClick = true;
                 checkMove = true;
@@ -88,43 +85,21 @@ int main()
 
             // Right Click de la souris qui envoie 5 balles max à la fois 
 
-            if (event.mouseButton.button == sf::Mouse::Right && !lock_rightClick)
+            /*if (event.mouseButton.button == sf::Mouse::Right && !lock_rightClick)
             {
-                
+                ball1 = Ball(GameInstance, GameInstance.getHeightScreen() / 60, GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
                 ball1.form->setFillColor(sf::Color(0, 0, 255));
 
-                listBall_used = { ball1, ball1, ball1, ball1, ball1 };
-
-                /*for (int i = 0; i < listBall.size(); i++)
+                if (listBall_used.size() < 5)
                 {
-                    if (listBall[i].form->getPosition().x == GameInstance.getLengthScreen() / 2 and listBall[i].form->getPosition().y == GameInstance.getHeightScreen())
-                    {
-                        for (int j = i; j >= 0; j--)
-                        {
-                            listBall_used = {listBall[i-j]};
-                        }
-                        break;
-                    }
-                }*/
-
-                for (int j = 0; j < listBall_used.size(); j++)
-                {
-                    listBall_used[j].directionVector(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
-                }
-
-                for (int i = 0; i < listBall_used.size(); i++)
-                {
-                    if (listBall_used[i].form->getPosition().x == GameInstance.getLengthScreen() / 2 and listBall_used[i].form->getPosition().y == GameInstance.getHeightScreen())
-                    {
-                        listBall_used[i].directionVector(localPosition.x, localPosition.y);
-                        break;
-                    }
+                    listBall_used.push_back(ball1);
+                    checkMove_right.push_back(true);
+                    listBall_used[listBall_used.size() - 1].directionVector(localPosition.x, localPosition.y);
                 }
 
                 lock_rightClick = true;
                 checkClick = true;
-                checkMove = true;
-            }
+            }*/
         }
 
         static bool lock_space;
@@ -135,6 +110,7 @@ int main()
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) and !lock_space)
         {
+            ball.directionVector(ball.form->getPosition().x, ball.form->getPosition().y);
             for (int i = 0; i < listBall_used.size(); i++)
             {
                 listBall_used[i].directionVector(listBall_used[i].form->getPosition().x, listBall_used[i].form->getPosition().y);
@@ -152,20 +128,35 @@ int main()
         {
             if (checkMove)
             {
-                for (int i = 0; i < listBall_used.size(); i++)
-                {
-                    listBall_used[i].move(deltaTime);
-                }
+                ball.move(deltaTime);
             }
 
-            for (int i = 0; i < listBall_used.size(); i++)
+            ball.reboundWall(statics.wall1, statics.wall2, statics.wall3);
+
+            if (ball.collide(statics.wall4.form) == true)
             {
+                checkMove = false;
+                ball.form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+            }
+
+            if (!ball.hasCollided)
+            {
+                statics.grid = ball.reboundBrick(statics.grid, statics.grid.size(), statics.grid[0].size());
+            }
+
+            window.draw(*ball.form);
+
+            //RIGHT CLICK MOVEMENT -----------------------
+
+            /*for (int i = 0; i < listBall_used.size(); i++)
+            {
+                listBall_used[i].move(deltaTime);
+
                 listBall_used[i].reboundWall(statics.wall1, statics.wall2, statics.wall3);
 
                 if (listBall_used[i].collide(statics.wall4.form) == true)
                 {
-                    checkMove = false;
-                    listBall_used[i].form->setPosition(GameInstance.getLengthScreen() / 2, GameInstance.getHeightScreen());
+                    listBall_used.erase(listBall_used.begin() + i);
                 }
 
                 if (!listBall_used[i].hasCollided)
@@ -174,7 +165,7 @@ int main()
                 }
 
                 window.draw(*listBall_used[i].form);
-            }
+            }*/
         }
 
         canonObj.form->setTexture(&texture);
