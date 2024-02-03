@@ -1,147 +1,101 @@
-#include <iostream>
-#include <cmath>
-
 #include "GameObject.h"
 
+#include <algorithm>
+#include <iostream>
 
-// Constructeurs et Destructeur
-
-GameObject::GameObject(Game GameInstance, int iRadius, int x, int y)
+GameObject::GameObject(sf::Vector2i mousePosition, GameInstance oGame)
 {
-	gameAttribut = GameInstance;
-	form = new sf::CircleShape(iRadius);
-	form->setPosition(x, y);
-	sizeX = 2 * iRadius;
-	sizeY = 2 * iRadius;
-	position = { static_cast<float>(x) , static_cast<float>(y) };
-	form->setOrigin(iRadius, iRadius);
-	form->setFillColor(sf::Color(255,255,255));
-	originDirection = { static_cast<float>(gameAttribut.getLengthScreen() / 2), static_cast<float>(gameAttribut.getHeightScreen())};
-}
-
-GameObject::GameObject(Game GameInstance, int iLength, int iHeigth, int x, int y)
-{	
-	gameAttribut = GameInstance;
-	sizeX = iLength;
-	sizeY = iHeigth;
-	form = new sf::RectangleShape(sf::Vector2f(iLength,iHeigth));
-	form->setPosition(x, y);
-	position = { static_cast<float>(x) , static_cast<float>(y) };
-	form->setOrigin(iLength/2, iHeigth/2);
-}
-
-GameObject::GameObject()
-{
-
+	createObject(oGame.getPlayerTurn(), oGame);
+	play(mousePosition, oGame);
+	pShape->setPosition(position);
 }
 
 
-GameObject::~GameObject()
+
+void GameObject::play(sf::Vector2i mousePosition, GameInstance oGame)
 {
-
-}
-
-
-// Gets
-
-int GameObject::getSizeX()
-{
-	return sizeX;
-}
-
-int GameObject::getSizeY()
-{
-	return sizeY;
-}
-
-std::vector<float> GameObject::getPosition()
-{
-	return position;
-}
-
-std::vector<float> GameObject::getDirection()
-{
-	return direction;
-}
-
-//Main Tools
-
-
-void GameObject::rotate( int iAngle)
-{
-	form->setRotation(iAngle);
-}
-
-
-bool GameObject::collide(sf::Shape* sForm1)
-{
-
-	bool collision = false;
-	sf::FloatRect boundingBox = sForm1->getGlobalBounds();
-	sf::FloatRect otherBox = form->getGlobalBounds();
-
-	if (boundingBox.intersects(otherBox))
+	if (mousePosition.x < oGame.x / 3)
 	{
-		collision = true;
+		if (mousePosition.y < oGame.y / 3)
+		{
+			position.x = oGame.x / 6;
+			position.y = oGame.y / 6;
+		}
+		else if (mousePosition.y < (oGame.y * 2) / 3)
+		{
+			position.x = oGame.x / 6;
+			position.y = oGame.y / 2;
+		}
+		else
+		{
+			position.x = oGame.x / 6;
+			position.y = (oGame.y * 5) / 6;
+		}
 	}
-
-	return collision;
-}
-
-
-void GameObject::move(float deltaTime)
-{
-	float dirX = direction[0];
-	float dirY = direction[1];
-	float speed = deltaTime * 400.f; // 10 pixels par seconde
-	position[0] += dirX * speed;
-	position[1] += dirY * speed;
-
-	form->setPosition(position[0], position[1]);
-}
-
-
-
-
-//Tools
-
-
-void GameObject::directionVector(int arrivalX, int arrivalY)
-{
-	int sizeScreenX = gameAttribut.getLengthScreen();
-	int sizeScreenY = gameAttribut.getHeightScreen();
-
-	float dirX = arrivalX - originDirection[0];
-	float dirY = arrivalY - originDirection[1];
-
-	float normedDirX = dirX / std::sqrt(dirX * dirX + dirY * dirY);
-	float normedDirY = dirY / std::sqrt(dirX * dirX + dirY * dirY);
-
-	direction = { normedDirX, normedDirY };
-}
-
-
-
-void GameObject::reboundX()
-{	
-	direction[1] = -direction[1];
-}
-
-void GameObject::reboundY()
-{
-	direction[0] = -direction[0];
-}
-
-bool GameObject::detectXCollide(sf::Shape* sForm1)
-{
-	sf::FloatRect boundingBox = sForm1->getGlobalBounds();
-	sf::FloatRect otherBox = form->getGlobalBounds();
-	bool xCollide = false;
-	
-	if (abs((abs(position[1] - sForm1->getPosition().y)) - (sizeY / 2 + boundingBox.getSize().y / 2)) < 1.5f)
+	else if (mousePosition.x < (oGame.x * 2) / 3)
 	{
-		xCollide = true;
+		if (mousePosition.y < oGame.y / 3)
+		{
+			position.x = oGame.x / 2;
+			position.y = oGame.y / 6;
+		}
+		else if (mousePosition.y < (oGame.y * 2) / 3)
+		{
+			position.x = oGame.x / 2;
+			position.y = oGame.y / 2;
+		}
+		else
+		{
+			position.x = oGame.x / 2;
+			position.y = (oGame.y * 5) / 6;
+		}
 	}
-	return xCollide;
+	else
+	{
+		if (mousePosition.y < oGame.y / 3)
+		{
+			position.x = (oGame.x * 5) / 6;
+			position.y = oGame.y / 6;
+		}
+		else if (mousePosition.y < (oGame.y * 2) / 3)
+		{
+			position.x = (oGame.x * 5) / 6;
+			position.y = oGame.y / 2;
+		}
+		else
+		{
+			position.x = (oGame.x * 5) / 6;
+			position.y = (oGame.y * 5) / 6;
+		}
+	}
+}
+
+
+
+
+
+void GameObject::createObject(int iTurn, GameInstance oGame)
+{
+	int distance = std::min(oGame.x, oGame.y);
+	int ecart = 5;
+
+	switch (iTurn)
+	{
+	case 0 :
+
+		pShape = new sf::CircleShape(distance/6 - ecart);
+		pShape->setOrigin(distance / 6 - ecart, distance / 6 - ecart);
+		break;
+
+	case 1 :
+
+		pShape = new sf::RectangleShape(sf::Vector2f(oGame.x/3 - ecart*2, oGame.y / 3 - ecart * 2));
+		pShape->setOrigin((oGame.x / 3 - ecart * 2) / 2, (oGame.y / 3 - ecart * 2) / 2);
+		break;
+
+	default :
+		std::cout<< "Erreur : aucun tour de joueur" << std::endl;
+		break;
+	}
 }
 
